@@ -3,8 +3,8 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.bbd.dp.spark.scala</groupId>
-  <artifactId>spark-scala</artifactId>
+  <groupId>chc.spark.scala</groupId>
+  <artifactId>spark-es-scala</artifactId>
   <packaging>pom</packaging>
   <version>1.0-SNAPSHOT</version>
   <modules>
@@ -16,9 +16,9 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <scala.version>2.10.6</scala.version>
-    <cdh.spark.version>1.6.0-cdh5.10.1</cdh.spark.version>
-    <cdh.hadoop.version>2.6.0-cdh5.10.1</cdh.hadoop.version>
+    <scala.version>2.11.8</scala.version>
+    <cdh.spark.version>2.4.0-cdh6.3.3</cdh.spark.version>
+    <cdh.hadoop.version>3.0.0-cdh6.3.3</cdh.hadoop.version>
   </properties>
 
   <dependencyManagement>
@@ -26,18 +26,9 @@
 
     <dependency>
       <groupId>org.apache.spark</groupId>
-      <artifactId>spark-core_2.10</artifactId>
+      <artifactId>spark-core_2.11</artifactId>
       <version>${cdh.spark.version}</version>
       <scope>provided</scope>
-      <!--<groupId>org.apache.spark</groupId>-->
-      <!--<artifactId>spark-core_2.10</artifactId>-->
-      <!--<version>2.1.0</version>-->
-      <!--<exclusions>-->
-      <!--<exclusion>-->
-        <!--<groupId>com.fasterxml.jackson.core</groupId>-->
-        <!--<artifactId>jackson-databind</artifactId>-->
-      <!--</exclusion>-->
-      <!--</exclusions>-->
     </dependency>
 
     <!-- scala -->
