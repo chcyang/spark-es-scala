@@ -40,7 +40,6 @@ object EsImportSparkProcess {
       sparkConf.setMaster("local[2]")
     }
     sparkConf.set("es.nodes", esNodes)
-    //    sparkConf.set("es.nodes", "10.28.100.51:39203")
     sparkConf.set("es.batch.size.bytes", "300000000")
     sparkConf.set("es.batch.size.entries", "50000")
     sparkConf.set("es.batch.write.refresh", "false")

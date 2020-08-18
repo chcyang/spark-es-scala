@@ -42,7 +42,6 @@ object EsExportSparkProcess {
       sparkConf.setMaster("local[2]")
     }
     sparkConf.set("es.nodes", esNodes)
-    //    sparkConf.set("es.nodes", "10.28.100.51:39203")
     sparkConf.set("es.batch.size.bytes", "300000000")
     sparkConf.set("es.batch.size.entries", "100000")
     sparkConf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
@@ -51,8 +50,8 @@ object EsExportSparkProcess {
     sparkConf.set("es.action.heart.beat.lead", "50")
     sparkConf.set("es.scroll.size","50000")
     lazy val sc = new SparkContext(sparkConf)
-    //    sc.esRDD("dp_bus_v3/qyxx")
-    //    sc.esRDD("dp_bus_v3/qyxx","?q=me*")
+    //    sc.esRDD("index/type")
+    //    sc.esRDD("index/type","?q=me*")
 
     var esrdd: RDD[scala.Tuple2[scala.Predef.String, scala.Predef.String]] = sc.esJsonRDD(esResource);
     if (null != queryString) {
