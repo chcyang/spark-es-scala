@@ -1,14 +1,14 @@
 package com.chc.dp.spark.scala.es
 
+import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
-import org.apache.spark.{SparkConf, SparkContext}
 import org.elasticsearch.spark._
-import org.slf4j.LoggerFactory
+import org.slf4j.{Logger, LoggerFactory}
 
-object EsExportSparkProcess {
+object EsExportSparkProcess extends EsSparkProcess {
 
-  val logger = LoggerFactory.getLogger(this.getClass)
-  val  isDebug: Boolean = false
+  val logger: Logger = LoggerFactory.getLogger(this.getClass)
+  val isDebug: Boolean = false
 
   def main(args: scala.Array[scala.Predef.String]): scala.Unit = {
     if (args.length >= 3 || args.length <= 4) {
@@ -37,27 +37,16 @@ object EsExportSparkProcess {
   def process(esNodes: String, esResource: String, outPath: String, queryString: String): Unit = {
 
     val name = "Elasticsearch export by spark"
-    lazy val sparkConf = new SparkConf().setAppName(name)
-    if (isDebug) {
-      sparkConf.setMaster("local[2]")
-    }
+    lazy val sparkConf = getSparkConf(name, isDebug)
     sparkConf.set("es.nodes", esNodes)
-    sparkConf.set("es.batch.size.bytes", "300000000")
-    sparkConf.set("es.batch.size.entries", "100000")
-    sparkConf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-    sparkConf.set("es.http.timeout", "30s")
-    sparkConf.set("es.http.retries", "3")
-    sparkConf.set("es.action.heart.beat.lead", "50")
-    sparkConf.set("es.scroll.size","50000")
-    lazy val sc = new SparkContext(sparkConf)
-    //    sc.esRDD("index/type")
-    //    sc.esRDD("index/type","?q=me*")
 
-    var esrdd: RDD[scala.Tuple2[scala.Predef.String, scala.Predef.String]] = sc.esJsonRDD(esResource);
+    lazy val sc = new SparkContext(sparkConf)
+
+    var esRdd: RDD[(String, String)] = sc.esJsonRDD(esResource)
     if (null != queryString) {
-      esrdd = sc.esJsonRDD(esResource, queryString);
+      esRdd = sc.esJsonRDD(esResource, queryString)
     }
-    esrdd.values.saveAsTextFile(outPath);
+    esRdd.values.saveAsTextFile(outPath)
 
     sc.stop()
   }

@@ -1,14 +1,14 @@
 package com.chc.dp.spark.scala.es
 
-import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.SparkContext
 import org.elasticsearch.spark._
-import org.slf4j.LoggerFactory
+import org.slf4j.{Logger, LoggerFactory}
 
 
-object EsImportSparkProcess {
+object EsImportSparkProcess extends EsSparkProcess {
 
-  val logger = LoggerFactory.getLogger(this.getClass)
-  val  isDebug: Boolean = false
+  val logger: Logger = LoggerFactory.getLogger(this.getClass)
+  val isDebug: Boolean = false
 
   def main(args: scala.Array[scala.Predef.String]): scala.Unit = {
     if (args.length >= 3) {
@@ -35,23 +35,15 @@ object EsImportSparkProcess {
   def process(esNodes: String, esResource: String, inPath: String, documentId: String): Unit = {
 
     val name = "Elasticsearch import by spark"
-    lazy val sparkConf = new SparkConf().setAppName(name)
-    if (isDebug) {
-      sparkConf.setMaster("local[2]")
-    }
+    lazy val sparkConf = getSparkConf(name, isDebug)
     sparkConf.set("es.nodes", esNodes)
     sparkConf.set("es.batch.size.bytes", "300000000")
     sparkConf.set("es.batch.size.entries", "50000")
     sparkConf.set("es.batch.write.refresh", "false")
-    sparkConf.set("es.batch.write.retry.wait", "30")
-    sparkConf.set("es.batch.write.retry.count", "10")
-    sparkConf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-    sparkConf.set("es.http.timeout", "30s")
-    sparkConf.set("es.http.retries", "3")
-    sparkConf.set("es.action.heart.beat.lead", "50")
+
     lazy val sc = new SparkContext(sparkConf)
 
-    val RDD = sc.textFile(inPath).filter(f => (f != null || f != ""))
+    val RDD = sc.textFile(inPath).filter(f => f != null || f != "")
 
     if (documentId != null) {
       RDD.saveJsonToEs(esResource, Map("es.mapping.id" -> documentId))
