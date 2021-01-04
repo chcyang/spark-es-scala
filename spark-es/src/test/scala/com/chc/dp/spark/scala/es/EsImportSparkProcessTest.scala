@@ -6,7 +6,7 @@ object EsImportSparkProcessTest {
 
     val argus = Array("192.168.100.51:39203",
       "index_name/type",
-      "E:\\data\\es_export",
+      "data/es_export",
       "hbase_rowkey")
     EsImportSparkProcess.main(argus)
   }

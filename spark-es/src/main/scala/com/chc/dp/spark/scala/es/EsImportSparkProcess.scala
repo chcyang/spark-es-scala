@@ -46,8 +46,8 @@ object EsImportSparkProcess {
     sparkConf.set("es.batch.write.retry.wait", "30")
     sparkConf.set("es.batch.write.retry.count", "10")
     sparkConf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-    sparkConf.set("es.http.timeout", "10m")
-    sparkConf.set("es.http.retries", "50")
+    sparkConf.set("es.http.timeout", "30s")
+    sparkConf.set("es.http.retries", "3")
     sparkConf.set("es.action.heart.beat.lead", "50")
     lazy val sc = new SparkContext(sparkConf)
 
